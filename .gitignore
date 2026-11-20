@@ -1,0 +1,14 @@
+.venv/
+instance/
+tickets.db
+__pycache__/
+.pytest_cache/
+*.sqlite3
+*.db-journal
+*.db-shm
+*.db-wal
+.env
+.env.*
+!.env.example
+.github/quizhub-agent.agent.md
+.github/skills/quizhub-mcq-expert/

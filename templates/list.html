@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Tickets | SupportPilot{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+  <div><h1>Tickets</h1><p class="lead-copy mb-0">The 50 most recent support tickets.</p></div>
+  <a href="{{ url_for('tickets.form') }}" class="btn btn-primary">New ticket</a>
+</div>
+{% set tickets = tickets|list %}
+{% if tickets %}
+<div class="panel table-responsive">
+  <table class="table align-middle mb-0">
+    <caption class="visually-hidden">Recent tickets</caption>
+    <thead><tr><th scope="col">Ticket</th><th scope="col">Category</th><th scope="col">Severity</th><th scope="col">Priority</th><th scope="col">Status</th></tr></thead>
+    <tbody>
+    {% for ticket in tickets %}
+    <tr>
+      <td><a href="{{ url_for('tickets.detail', ticket_id=ticket.id) }}">{{ ticket.display_title }}</a><div class="small text-body-secondary">{{ ticket.ticket_id }}</div></td>
+      <td>{{ ticket.category }}</td>
+      <td>{{ ticket.severity }}</td>
+      <td><span class="priority priority-{{ ticket.priority }}">{{ ticket.priority }}</span></td>
+      <td><span class="status-pill">{{ ticket.status }}</span></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="panel p-4">No tickets have been submitted yet.</div>
+{% endif %}
+{% endblock %}

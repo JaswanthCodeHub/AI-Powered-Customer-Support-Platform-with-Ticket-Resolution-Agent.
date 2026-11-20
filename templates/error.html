@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Unable to submit ticket</h1>
+<p>{{ message }}</p>
+<a href="{{ url_for('tickets.form') }}">Return to the ticket form</a>
+{% endblock %}

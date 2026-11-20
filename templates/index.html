@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Create ticket | SupportPilot{% endblock %}
+{% macro text_field(key, label, placeholder, width='col-12') %}
+<div class="{{ width }}">
+  <label class="form-label" for="{{ key }}">{{ label }} <span aria-hidden="true">*</span></label>
+  {% if key == 'description' %}
+  <textarea class="form-control{% if key in errors %} is-invalid{% endif %}" id="{{ key }}" name="{{ key }}" rows="5" maxlength="{{ specs[key][1] }}" placeholder="{{ placeholder }}" required{% if key in errors %} aria-invalid="true" aria-describedby="{{ key }}-error"{% endif %}>{{ fields.get(key, '') }}</textarea>
+  {% else %}
+  <input class="form-control{% if key in errors %} is-invalid{% endif %}" id="{{ key }}" name="{{ key }}" type="{{ 'email' if key == 'email' else 'text' }}" maxlength="{{ specs[key][1] }}" placeholder="{{ placeholder }}" value="{{ fields.get(key, '') }}" required{% if key in errors %} aria-invalid="true" aria-describedby="{{ key }}-error"{% endif %}>
+  {% endif %}
+  {% if key in errors %}<div class="invalid-feedback" id="{{ key }}-error">{{ errors[key] }}</div>{% endif %}
+</div>
+{% endmacro %}
+{% block content %}
+<form method="post" class="panel intake-card">
+  <div class="intake-heading">
+    <div><h1>Create a Support Ticket</h1><p>Submit an issue for classification and prioritization.</p></div>
+    <span class="intake-mark" aria-hidden="true">+</span>
+  </div>
+  {% if errors %}<p class="alert alert-danger" role="alert">Check the highlighted fields and submit again.</p>{% endif %}
+  <div class="row g-4">
+    {{ text_field('employee', 'Employee name', 'Enter employee name', 'col-md-6') }}
+    {{ text_field('email', 'Email address', 'employee@company.com', 'col-md-6') }}
+    <div class="col-md-6">
+      <label class="form-label" for="department">Department <span aria-hidden="true">*</span></label>
+      {% set departments = ['IT', 'Sales', 'Finance', 'Human Resources', 'Operations', 'Engineering', 'Customer Support', 'Marketing', 'Other'] %}
+      <select class="form-select{% if 'department' in errors %} is-invalid{% endif %}" name="department" id="department" required{% if 'department' in errors %} aria-invalid="true" aria-describedby="department-error"{% endif %}>
+        <option value="" disabled{% if not fields.get('department') %} selected{% endif %}>Select department</option>
+        {% if fields.get('department') and fields.department not in departments %}<option selected value="{{ fields.department }}">{{ fields.department }}</option>{% endif %}
+        {% for department in departments %}<option value="{{ department }}"{% if fields.get('department') == department %} selected{% endif %}>{{ department }}</option>{% endfor %}
+      </select>
+      {% if 'department' in errors %}<div class="invalid-feedback" id="department-error">{{ errors.department }}</div>{% endif %}
+    </div>
+    <div class="col-md-6">
+      <label class="form-label" for="business_impact">Business impact <span class="optional-label">(optional)</span></label>
+      <select class="form-select{% if 'business_impact' in errors %} is-invalid{% endif %}" id="business_impact" name="business_impact" aria-describedby="impact-help{% if 'business_impact' in errors %} impact-error{% endif %}"{% if 'business_impact' in errors %} aria-invalid="true"{% endif %}>
+        <option value=""{% if not fields.get('business_impact') %} selected{% endif %}>Use severity only</option>
+        <option value="Standard"{% if fields.get('business_impact') == 'Standard' %} selected{% endif %}>Standard</option>
+        <option value="High"{% if fields.get('business_impact') == 'High' %} selected{% endif %}>High — time-sensitive business activity</option>
+      </select>
+      <div id="impact-help" class="form-text">Choose High when an important business activity is affected.</div>
+      {% if 'business_impact' in errors %}<div class="invalid-feedback" id="impact-error">{{ errors.business_impact }}</div>{% endif %}
+    </div>
+    {{ text_field('title', 'Ticket title', 'Briefly describe the issue') }}
+    {{ text_field('description', 'Ticket description', 'Explain the issue, when it started and how it affects your work…') }}
+  </div>
+  <div class="intake-actions"><p>Fields marked <span aria-hidden="true">*</span> are required.</p><button type="submit" class="btn btn-primary">Submit Ticket &amp; Analyze <span aria-hidden="true">→</span></button></div>
+</form>
+{% endblock %}

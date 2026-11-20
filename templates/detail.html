@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ ticket.ticket_id }} | SupportPilot{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('tickets.listing') }}">← All tickets</a>
+<p class="ticket-id mt-4 mb-1">{{ ticket.ticket_id }} <span class="status-pill">{{ ticket.status }}</span></p>
+<h1>{{ ticket.display_title }}</h1>
+<p class="lead-copy">Submitted by {{ ticket.employee }} · {{ ticket.department }} · {{ ticket.status }}</p>
+<div class="panel p-4 mb-4">
+  <h2 class="h5 mb-3">Triage result</h2>
+  <dl class="row g-3 mb-0 result-grid">
+    <div class="col-sm-6 col-lg-3"><dt>Category</dt><dd>{{ ticket.category }}</dd></div>
+    <div class="col-sm-6 col-lg-3"><dt>Severity</dt><dd>{{ ticket.severity }}</dd></div>
+    <div class="col-sm-6 col-lg-3"><dt>Priority</dt><dd><span class="priority priority-{{ ticket.priority }}">{{ ticket.priority }}</span></dd></div>
+    <div class="col-sm-6 col-lg-3"><dt>Category confidence</dt><dd>{{ "%.1f"|format(ticket.confidence * 100) }}%</dd></div>
+  </dl>
+  <p class="small text-body-secondary mb-0 mt-3">Reported business impact: {{ ticket.business_impact }}</p>
+</div>
+<section class="panel p-4">
+  <h2 class="h5">Description</h2>
+  <p class="description">{{ ticket.description }}</p>
+  <p class="mb-0 small text-body-secondary">{{ ticket.email }} · <time datetime="{{ ticket.created_at }}">{{ ticket.created_at[:19]|replace('T', ' ') }} UTC</time></p>
+</section>
+{% if ticket.status == 'Open' %}
+<section class="resolution-panel">
+  <div><h2 class="h5">Issue solved?</h2><p class="mb-0">Close this ticket after confirming the issue has been resolved.</p></div>
+  <form method="post" action="{{ url_for('tickets.resolve', ticket_id=ticket.id) }}"><button class="btn btn-success" type="submit">Mark as resolved &amp; close</button></form>
+</section>
+{% else %}
+<p class="resolution-panel">This ticket is closed.</p>
+{% endif %}
+<div class="result-actions"><a class="btn btn-primary" href="{{ url_for('tickets.form') }}">Submit another ticket</a><a href="{{ url_for('tickets.listing') }}">View saved tickets →</a></div>
+{% endblock %}

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}SupportPilot{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="workspace">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <aside class="workspace-sidebar">
+    <a class="brand" href="{{ url_for('tickets.overview') }}"><span class="brand-mark" aria-hidden="true">SP</span>SupportPilot</a>
+    <p class="sidebar-caption">IT support workspace</p>
+    <nav aria-label="Main navigation">
+      <p class="sidebar-label">Workspace</p>
+      <a class="sidebar-link{% if request.endpoint == 'tickets.overview' %} active{% endif %}" {% if request.endpoint == 'tickets.overview' %}aria-current="page"{% endif %} href="{{ url_for('tickets.overview') }}"><span aria-hidden="true">◫</span>Overview</a>
+      <a class="sidebar-link{% if request.endpoint == 'tickets.form' %} active{% endif %}" {% if request.endpoint == 'tickets.form' %}aria-current="page"{% endif %} href="{{ url_for('tickets.form') }}"><span aria-hidden="true">+</span>Create ticket</a>
+      <a class="sidebar-link{% if request.endpoint in ['tickets.listing', 'tickets.detail'] %} active{% endif %}" {% if request.endpoint in ['tickets.listing', 'tickets.detail'] %}aria-current="page"{% endif %} href="{{ url_for('tickets.listing') }}"><span aria-hidden="true">≡</span>All tickets</a>
+    </nav>
+    <div class="sidebar-footer">SupportPilot<span>Milestone 1</span></div>
+  </aside>
+  <div class="workspace-main">
+    <header class="workspace-topbar"><span>Ticket intake &amp; classification</span><span class="workspace-team">Support workspace</span></header>
+    <main id="main" class="container shell py-4 py-md-5">{% block content %}{% endblock %}</main>
+    <footer class="container shell site-footer">SupportPilot <span>Milestone 1 · IT service desk</span></footer>
+  </div>
+</body>
+</html>
